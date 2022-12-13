@@ -1,0 +1,33 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=localhost:8080
+  backend:
+    build: ./Backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - MONGO_DB_CONNECTION_STRING=mongodb+srv://sduEmergency:${MONGODB_PASSWORD}@emergency-cluster.j6uuumu.mongodb.net/?retryWrites=true&w=majority
+      - MONGO_DB_NAME=$MONGODB_DATABASE
+      - REDIS_URI=redis
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGODB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
+      MONGO_INITDB_DATABASE: $MONGODB_DATABASE
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+      
